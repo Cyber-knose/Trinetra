@@ -6,6 +6,12 @@
 
 > Trinetra is a powerful open-source Web OSINT (Open Source Intelligence) tool designed to gather critical information about target domains. It automates the process of WHOIS lookup, Subdomain enumeration, and Port Scanning.
 
+## 🚀 Live Demo
+
+<a href="https://trinetra-nxg.netlify.app" target="_blank">
+  <img src="https://img.shields.io/badge/Click%20Here%20for%20Real%20Time%20Use-000000?style=for-the-badge&logo=netlify&logoColor=white" alt="Live Demo"/>
+</a>
+
 ## ✨ Features
 
 Trinetra comes packed with essential OSINT capabilities:
