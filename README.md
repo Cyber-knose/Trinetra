@@ -1,367 +1,65 @@
-# Trinetra
+# 🕵️ Trinetra - Web OSINT Tool
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TriNetra OSINT Suite</title>
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- jsPDF Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<p align="center">
+  <img src="Trinetra.png" alt="Trinetra Preview" width="800"/>
+</p>
 
-    <style>
-        /* ==================== CSS START ==================== */
-        :root {
-            --primary: #00f3ff;
-            --secondary: #0099ff;
-            --bg: #0a0a0f;
-            --glass: rgba(13, 17, 23, 0.95);
-            --border: rgba(0, 243, 255, 0.2);
-            --text: #e6edf3;
-            --dim: #8b949e;
-            --success: #00ff88;
-            --danger: #ff3366;
-        }
+> Trinetra is a powerful open-source Web OSINT (Open Source Intelligence) tool designed to gather critical information about target domains. It automates the process of WHOIS lookup, Subdomain enumeration, and Port Scanning.
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+## ✨ Features
 
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--bg);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            color: var(--text);
-            overflow-x: hidden;
-        }
+Trinetra comes packed with essential OSINT capabilities:
 
-        /* Background Grid Animation */
-        .neon-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(0, 243, 255, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(0, 153, 255, 0.08) 0%, transparent 50%),
-                linear-gradient(180deg, #0a0a0f 0%, #0d1520 100%);
-            z-index: -1;
-        }
+*   **🌐 Domain Reconnaissance:** Fast WHOIS discovery to identify ownership details.
+*   **🚢 Port Scanning:** Identify open ports and running services on target IPs.
+*   **🔍 Subdomain Enumeration:** Discover subdomains associated with the main domain.
+*   **📡 Real-time Data:** efficient crawling and retrieval of public records.
+*   **📄 Exportable Reports:** Save your findings for offline analysis.
 
-        .neon-bg::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: gridMove 20s linear infinite;
-        }
+## 🛠️ Technology Stack
 
-        @keyframes gridMove { 0% { transform: translate(0, 0); } 100% { transform: translate(50px, 50px); } }
+*   **Backend:** (e.g., Python / Flask or Node.js)
+*   **Frontend:** (e.g., HTML5, CSS3, JavaScript)
 
-        /* Main Container */
-        .container {
-            background: var(--glass);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 0 40px rgba(0, 243, 255, 0.1), inset 0 0 60px rgba(0, 243, 255, 0.02);
-            border: 1px solid var(--border);
-            max-width: 900px;
-            width: 100%;
-        }
+  ## 🎯 Uses of Trinetra
 
-        .logo { text-align: center; margin-bottom: 25px; }
+- **Cybersecurity Research**  
+  Gather information about potential vulnerabilities of a domain before conducting security audits.
 
-        .glitch {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 58px;
-            font-weight: 900;
-            color: var(--primary);
-            text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary), 0 0 40px var(--primary);
-            animation: glitch 2s infinite;
-            display: inline-block;
-        }
+- **Penetration Testing**  
+  Collect reconnaissance data about target systems during authorized red team operations.
 
-        @keyframes glitch {
-            0%, 90%, 100% { text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary), 0 0 40px var(--primary); }
-            92% { text-shadow: -3px 0 #0099ff, 3px 0 #ff3366; }
-            94% { text-shadow: 3px 0 #0099ff, -3px 0 #ff3366; }
-        }
+- **Threat Intelligence**  
+  Monitor and track malicious domains, phishing sites, or suspicious URLs.
 
-        /* Tabs System */
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 25px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 15px;
-            flex-wrap: wrap;
-        }
+- **Domain Investigation**  
+  Identify domain owners, registration dates, and contact details for legitimate research.
 
-        .tab-btn {
-            padding: 10px 25px;
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--dim);
-            border-radius: 6px;
-            font-family: 'Orbitron', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
+- **Bug Bounty Hunting**  
+  Discover subdomains and open ports to find attack surfaces for bug bounty programs.
 
-        .tab-btn:hover { border-color: var(--primary); color: var(--text); }
-        
-        .tab-btn.active {
-            background: rgba(0, 243, 255, 0.1);
-            color: var(--primary);
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
-            text-shadow: 0 0 8px var(--primary);
-        }
+- **Brand Protection**  
+  Monitor for fake domains or websites impersonating your brand.
 
-        /* Search Input */
-        .search-box {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+- **Incident Response**  
+  Investigate attacks by analyzing threat actor infrastructure like IPs and domains.
 
-        input, select {
-            padding: 18px 25px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 2px solid rgba(0, 243, 255, 0.3);
-            border-radius: 12px;
-            font-size: 16px;
-            font-family: 'Rajdhani', sans-serif;
-            color: var(--text);
-            outline: none;
-            transition: all 0.3s;
-        }
+- **Competitive Intelligence**  
+  Understand the digital presence of competitors, their technology stack, and subdomains.
 
-        input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 243, 255, 0.2); }
-        select { cursor: pointer; min-width: 130px; }
+- **Law Enforcement**  
+  Assist authorities in tracking illegal or fraudulent websites.
 
-        button.scan-btn {
-            padding: 18px 40px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #0a0a0f;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            letter-spacing: 1px;
-        }
+- **Personal Security**  
+  Check if your personal or company domain is exposed online.
 
-        button.export-btn {
-            padding: 18px 40px;
-            background: transparent;
-            border: 2px solid var(--success);
-            color: var(--success);
-            border-radius: 12px;
-            font-size: 16px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
 
-        button.scan-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 30px rgba(0, 243, 255, 0.5); }
-        button.export-btn:hover { background: var(--success); color: #000; }
-        button:disabled { background: #222; color: #555; cursor: not-allowed; }
+  ## ⚠️ Disclaimer
 
-        /* Stats */
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-bottom: 25px;
-            background: rgba(0, 243, 255, 0.03);
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
+**Trinetra is developed for educational and authorized use only.**
 
-        .stat-item { text-align: center; }
-        .stat-number { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: bold; color: var(--primary); display: block; }
-        .stat-label { font-size: 12px; color: var(--dim); text-transform: uppercase; }
-
-        /* Loading Bar */
-        #loader { width: 100%; height: 4px; background: rgba(0,243,255,0.1); margin-bottom: 20px; display: none; border-radius: 2px; overflow: hidden; }
-        #loader.active { display: block; }
-        #scanLine { height: 100%; background: var(--primary); width: 0%; box-shadow: 0 0 10px var(--primary); transition: width 0.2s; }
-
-        /* Sections / Panels */
-        .panel { display: none; animation: fadeIn 0.4s; }
-        .panel.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Results Lists */
-        .results-list { list-style: none; max-height: 400px; overflow-y: auto; padding-right: 5px; }
-        .results-list::-webkit-scrollbar { width: 6px; }
-        .results-list::-webkit-scrollbar-track { background: #0a0a0f; }
-        .results-list::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-        .results-list li {
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.02);
-            margin-bottom: 8px;
-            border-radius: 8px;
-            border-left: 3px solid #333;
-            font-size: 15px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .results-list li.found { border-left-color: var(--primary); background: rgba(0, 243, 255, 0.05); }
-        .badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #222; color: #888; }
-
-        /* Whois Grid */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .card { background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .card_full { grid-column: span 2; }
-        .label { font-size: 11px; color: var(--dim); text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; display: block;}
-        .value { font-size: 16px; color: var(--text); font-weight: 600; word-break: break-all; }
-
-        /* Port Grid */
-        .port-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
-        .port-card { padding: 15px; text-align: center; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid #333; transition: all 0.3s; }
-        .port-card.open { border-color: var(--success); background: rgba(0,255,136,0.05); box-shadow: 0 0 15px rgba(0,255,136,0.1); }
-        .p-num { font-family: 'Orbitron'; font-size: 20px; font-weight: bold; display: block; }
-        .p-stat { font-size: 12px; margin-top: 5px; font-weight: bold; color: var(--danger); }
-        .port-card.open .p-stat { color: var(--success); }
-        .p-name { font-size: 10px; color: var(--dim); margin-top: 5px; display: block; }
-
-        /* Tech Stack */
-        .tech-flex { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        .tech-chip { padding: 10px 20px; background: rgba(0, 243, 255, 0.05); border: 1px solid var(--primary); border-radius: 20px; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 8px; }
-
-        /* Empty State */
-        .empty { text-align: center; color: #444; padding: 40px; font-style: italic; }
-
-        /* Footer */
-        .footer { text-align: center; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
-        .footer p { color: var(--dim); font-size: 14px; }
-        .footer span { color: var(--primary); font-weight: bold; text-shadow: 0 0 10px var(--primary); }
-
-        @media (max-width: 600px) {
-            .container { padding: 20px; }
-            .search-box { flex-direction: column; }
-            .grid-2 { grid-template-columns: 1fr; }
-            .card_full { grid-column: span 1; }
-            .stats { gap: 20px; }
-        }
-        /* ==================== CSS END ==================== */
-    </style>
-</head>
-<body>
-    <div class="neon-bg"></div>
-    
-    <div class="container">
-        <div class="logo">
-            <div class="glitch">Trinetra</div>
-        </div>
-        
-        <!-- Navigation Tabs -->
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('subdomain')">Subdomains</button>
-            <button class="tab-btn" onclick="switchTab('whois')">Whois Lookup</button>
-            <button class="tab-btn" onclick="switchTab('portscan')">Port Scan</button>
-            <button class="tab-btn" onclick="switchTab('tech')">Tech Stack</button>
-        </div>
-
-        <!-- Search Input -->
-        <div class="search-box">
-            <input type="text" id="targetInput" placeholder="Enter target domain (example.com)" onkeydown="if(event.key === 'Enter') initScan()">
-            <button id="scanBtn" class="scan-btn" onclick="initScan()">SCAN NOW</button>
-        </div>
-
-        <!-- Export Controls -->
-        <div class="search-box" style="margin-top: -10px;">
-            <select id="exportFormat">
-                <option value="csv">CSV</option>
-                <option value="html">HTML</option>
-                <option value="txt">TXT</option>
-                <option value="pdf">PDF</option>
-            </select>
-            <button class="export-btn" onclick="exportData()">EXPORT REPORT</button>
-        </div>
-
-        <!-- Statistics Panel -->
-        <div class="stats">
-            <div class="stat-item">
-                <span class="stat-number" id="statCount">0</span>
-                <span class="stat-label">Processed</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" id="statFound">0</span>
-                <span class="stat-label">Found</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" id="statState">Ready</span>
-                <span class="stat-label">Status</span>
-            </div>
-        </div>
-
-        <!-- Loading Bar -->
-        <div id="loader"><div id="scanLine"></div></div>
-
-        <!-- PANEL: Subdomains -->
-        <div id="panel-subdomain" class="panel active">
-            <ul class="results-list" id="resSubdomain">
-                <li class="empty">Enter domain to find subdomains.</li>
-            </ul>
-        </div>
-
-        <!-- PANEL: Whois -->
-        <div id="panel-whois" class="panel">
-            <div class="grid-2" id="resWhois">
-                <div class="empty" style="grid-column: span 2;">Enter domain to lookup registration details.</div>
-            </div>
-        </div>
-
-        <!-- PANEL: Port Scan -->
-        <div id="panel-portscan" class="panel">
-            <div class="port-grid" id="resPort">
-                <div class="empty" style="grid-column: span 5;">Enter domain to scan common ports.</div>
-            </div>
-        </div>
-
-        <!-- PANEL: Tech Stack -->
-        <div id="panel-tech" class="panel">
-            <div class="tech-flex" id="resTech">
-                <div class="empty">Enter domain to detect technologies.</div>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p>Powered by <span>Priyanshu Jangra (Nextgen securities)</span> | Advanced OSINT Suite</p>
-        </div>
-    </div>
-
-    <script>
-        // ==================== JAVASCRIPT START ====================
-        
-        let currentData = {
-            subdomain: [],
-            whois: {},
-            ports: [],
-            tech: []
-        };
-
-        // Tab Switching
-        function switchTab(tabName)
+- This tool is intended to help users learn about **OSINT techniques** and understand how open-source intelligence gathering works.
+- Users must obtain **explicit permission** before scanning any domain or network that they do not own or have authorization to test.
+- **Misuse** of this tool for malicious purposes is strictly prohibited and may violate local, national, or international laws.
+- The developer **does not accept any responsibility** for any damage or legal consequences caused by the misuse of this tool.
+- Use this tool responsibly and ethically at all times.
